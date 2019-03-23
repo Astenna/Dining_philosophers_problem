@@ -5,11 +5,14 @@ int main() {
 
     // should be from args
     int philosopherNumber = 3;
-    bool stopThreads = false;
+    char entered = 'a';
 
-    std::cout << "Press q to stop theards!" << std::endl;
-    while(!stopThreads) {
-        ;
+    std::cout << "Enter q to stop theards!" << std::endl;
+    table mainTable = table(philosopherNumber);
+    while(entered != 'q') {
+        std::cout << "Enter q to stop theards!" << std::endl;
+        std::cin >> entered;
+        std::cout << "exited";
     }
-
+    mainTable.stop();
 }

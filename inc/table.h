@@ -1,17 +1,18 @@
 #include "philosopher.h"
-#include "fork.h"
-#include <pthread.h>
+#include "fork_t.h"
+#include <thread>
 
 class table {
 
     const int phil_num;
-    pthread_t* ids;
+    std::thread* philospoherThreads;
     philosopher* philosophers;
-    fork* forks;
-
-    ~table();
+    fork_t* forks;
     
+    void initialize_philosphers();
+
     public:
     table(int _phil_num);
-    void start_dinner();
+    ~table();
+    void stop();
 };
