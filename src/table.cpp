@@ -18,14 +18,8 @@ void table::initialize_philosphers() {
 
     for(int i=0; i < phil_num; ++i) {
         philosophers[i] = philosopher(i, forks[i*2],forks[i*2+1]);
-        philospoherThreads[i] = std::thread(&philosopher::dine, &philosophers[i]);
+        philospoherThreads[i] = std::thread(&philosopher::dine, philosophers[i]);
         //philospoherThreads[i].join();
-    }
-
-        for(int i=0; i < phil_num; ++i) {
-        //philosophers[i] = philosopher(i, forks[i*2],forks[i*2+1]);
-        //philospoherThreads[i] = std::thread(&philosopher::dine, &philosophers[i]);
-        philospoherThreads[i].join();
     }
 }
 

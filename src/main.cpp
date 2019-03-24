@@ -1,18 +1,29 @@
 #include <iostream>
 #include "../inc/table.h"
+#include <string>
 
-int main() {
+int main(int argc, char *argv[]) {
 
-    // should be from args
     int philosopherNumber = 3;
-    char entered = 'a';
+    int entered = 'a';
 
+    if( argc > 1) {
+        try {
+            philosopherNumber = std::stoi(argv[1]);
+        }
+        catch(std::invalid_argument &obj) {
+            std::cout<<"Not a integer number given. Philosopher number set to default (=3)." 
+                        << std::endl;
+        }
+    }
+    
     std::cout << "Enter q to stop theards!" << std::endl;
     table mainTable = table(philosopherNumber);
-    while(entered != 'q') {
+
+    while(entered != 'q' && std::cin) {
         std::cout << "Enter q to stop theards!" << std::endl;
         std::cin >> entered;
-        std::cout << "exited";
     }
+    
     mainTable.stop();
 }
