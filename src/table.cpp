@@ -15,16 +15,17 @@ void table::initialize_philosphers() {
     philosopher::visualizer = visualizer;
     fork_t::visualizer = visualizer;
 
-    forks.reserve(philosopher_number*2);
-    for(int i=0; i < 2*philosopher_number; ++i) {
-        forks.push_back(fork_t(i));
+    forks.reserve(philosopher_number);
+    for(int i=0; i < philosopher_number; ++i) {
+        forks.push_back(fork_t(i, i-1==-1 ? 0 : i-1));
     }
     philosophers.reserve(philosopher_number);
     for(int i=0; i < philosopher_number; ++i) {
-        philosophers.push_back(philosopher(i, std::ref(forks[2*i]),std::ref((forks[2*i+1]))));
+        philosophers.push_back(philosopher(i, std::ref(forks[i]),std::ref((forks[(i+1)%philosopher_number]))));
         philospoher_threads[i] = std::thread(&philosopher::dine, std::ref(philosophers[i]));
     }
-    //visualizer_thread = new std::thread(&visualization::visualize, std::ref(visualizer));
+
+    fork_t::is_initialized = true;
 }
 
 void table::stop() {

@@ -24,6 +24,7 @@ class philosopher {
     philosopher_state state;
     static bool isStopped;
     static visualization *visualizer;
+    
     std::string get_state();
     philosopher(int index, fork_t &_left_fork, fork_t &_right_fork); 
     philosopher() {;}
