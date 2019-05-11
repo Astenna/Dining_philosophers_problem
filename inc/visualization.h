@@ -1,33 +1,32 @@
-#ifndef VISUALIZATION
-#define VISUALIZATION
+#ifndef VISUALIZATION_H
+#define VISUALIZATION_H
 #include <ncurses.h>
-#include "philosopher.h"
-#include "fork_t.h"
+#include <mutex>
 
 class visualization {
     private:
-    int philosopher_number;
-    std::vector<philosopher> philosophers;
-    std::vector<fork_t> forks;
     WINDOW* philosophers_window;
     WINDOW* forks_window;
+    std::mutex mutex;
     int max_x;
     int max_y;
     int margin_x;
     int margin_y;
     int separator;
-    int column_width;
 
+    void draw_philosophers();
+    void draw_forks();
     void calculate_coordinates();
 
     public:
-    visualization() {;}
-    visualization(std::vector<philosopher> &_philosophers, std::vector<fork_t> &_forks, int num);
-    void draw_philosophers();
-    void draw_forks();
-    void update_philosophers();
-    void update_forks();
-    void visualize();
+    visualization();
+    ~visualization();
+    void print_fork_index(int index); 
+    void print_philosopher_index(int index);
+    void update_fork_state(int index, std::string state);
+    void update_fork_owner(int index, int owner);
+    void update_philosopher_state(int index, std::string state);
+
 };
 
 #endif

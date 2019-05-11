@@ -1,21 +1,18 @@
 #include "../inc/visualization.h"
 #include <unistd.h>
 
-visualization::visualization(std::vector<philosopher> &_phil, std::vector<fork_t> &_forks, int num) {
-    philosophers = _phil;
-    forks = _forks;
-    philosopher_number = num;
+visualization::visualization() {
     initscr();
     noecho();
     box(stdscr,0,0);
     refresh();
+    draw_philosophers();
     draw_forks();
-    draw_philosophers(); 
 }
 
 void visualization::draw_philosophers() {
     calculate_coordinates();
-    column_width = (float)(separator-margin_x)/4;
+    int column_width = (float)(separator-margin_x)/4;
 
     philosophers_window = derwin(stdscr,max_y-2*margin_y, separator-margin_x,margin_y,margin_x);
     box(philosophers_window,0,0);
@@ -38,7 +35,7 @@ void visualization::draw_philosophers() {
 
 void visualization::draw_forks() {
     calculate_coordinates();
-    column_width = (float)(max_x-separator-margin_x)/3;
+    int column_width = (float)(max_x-separator-margin_x)/3;
     forks_window = derwin(stdscr,max_y-2*margin_y, 3*column_width,margin_y,separator);
 
     box(forks_window,0,0);
@@ -63,59 +60,60 @@ void visualization::calculate_coordinates() {
     separator = (float) (max_x) * 0.6;
 }
 
-void visualization::update_forks() {
-    calculate_coordinates();
-    column_width = (float)(max_x-separator-margin_x)/3;
-    // need to cast from int to const char*
+void visualization::print_fork_index(int index) {
     char buf[16];
     const char* p;
+    sprintf(buf,"%d", index);
+    p = buf; // need to cast from int to const char*
 
-    for(int i=0; i< philosopher_number; ++i) {
-        sprintf(buf,"%d", forks[i].get_id());
-        p = buf;
-        mvwprintw(forks_window, 2*i+5,3,"%s",p);
-        mvwprintw(forks_window, 2*i+5,column_width+3,"c");
-        mvwprintw(forks_window, 2*i+5,column_width+3,"%s",forks[i].get_state().c_str());
-        sprintf(buf,"%d", forks[i].get_owner_id());
-        sprintf(buf,"%d", 'b');        
-        p = buf;
-        mvwprintw(forks_window, 2*i+5,2*column_width+3,"%s",p);
-    }
+    std::lock_guard<std::mutex> lock(mutex);
+    mvwprintw(forks_window, 2*index+5,3,"%s",p);
     touchwin(forks_window);
     wrefresh(forks_window);
 }
 
-
-void visualization::update_philosophers() {
-    calculate_coordinates();
-    column_width = (float)(separator-margin_x)/4;
-    // need to cast from int to const char*
+void visualization::print_philosopher_index(int index) {
     char buf[16];
     const char* p;
+    sprintf(buf,"%d", index);
+    p = buf; // need to cast from int to const char*
 
-   for(int i=0; i < philosopher_number; ++i) {
-        sprintf(buf,"%d", philosophers[i].getId());
-        p = buf;
-        mvwprintw(philosophers_window, 2*i+5,3,"%s",p);
-        mvwprintw(philosophers_window, 2*i+5,3+column_width,philosophers[i].get_state().c_str());
-        //mvwprintw(philosophers_window, 2*i+5,3,"%s",p);
-        //mvwaddstr(philosophers_window, 2*i+5,column_width+3,philosophers[0].get_state().c_str());
-    }
+    std::lock_guard<std::mutex> lock(mutex);
+    mvwprintw(philosophers_window, 2*index+5,3,"%s",p);
     touchwin(philosophers_window);
     wrefresh(philosophers_window);
 }
 
+void visualization::update_fork_state(int index, std::string state) {
+    int column_width = (float)(max_x-separator-margin_x)/3;
+    std::lock_guard<std::mutex> lock(mutex);
+    mvwprintw(forks_window, 2*index+5,column_width+3,"%s",state.c_str());
+    touchwin(forks_window);
+    wrefresh(forks_window);
+}
 
-void visualization::visualize() {
-   int i =0;
-   philosophers[0].index =889;
-   while(!philosopher::isStopped) {
-       i++;
-       sleep(1);
-       update_philosophers();
-       update_forks();
-       refresh();
-   }
+void visualization::update_fork_owner(int index, int owner) {
+    char buf[16];
+    const char* p;
+    sprintf(buf,"%d", owner);
+    p = buf; // need to cast from int to const char*
+    int  column_width = (float)(max_x-separator-margin_x)/3;
+
+    std::lock_guard<std::mutex> lock(mutex);
+    mvwprintw(forks_window, 2*index+5,2*column_width+3,"%s",p);
+    touchwin(forks_window);
+    wrefresh(forks_window);
+}
+
+void visualization::update_philosopher_state(int index, std::string state) {
+int column_width = (float)(separator-margin_x)/4;
+    std::lock_guard<std::mutex> lock(mutex);
+    mvwprintw(philosophers_window, 2*index+5,column_width+3,"%s",state.c_str());
+    touchwin(philosophers_window);
+    wrefresh(philosophers_window);
+}
+
+visualization::~visualization() {
    delwin(forks_window);
    delwin(philosophers_window);
    endwin();

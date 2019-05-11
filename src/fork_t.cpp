@@ -3,6 +3,7 @@
 fork_t::fork_t(int _index) {
     index = _index;
     state = DIRTY;
+    visualizer->print_fork_index(_index);
 }
 
 std::string fork_t::get_state() {

@@ -9,23 +9,23 @@ philosopher::philosopher(int _index, fork_t &_left_fork, fork_t &_right_fork) {
     index = _index;
     mt = std::mt19937(time(0)+_index);
     distribution = std::uniform_int_distribution<int>(1, 5);
+    visualizer->print_philosopher_index(index);
 }
 
 void philosopher::dine() {
-    index = 678;
     while(!isStopped) {
-        state = WAIT_LEFT;
+        state = EATING;
+        visualizer->update_philosopher_state(index,get_state());
         eat();
         state = THINKING;
+        visualizer->update_philosopher_state(index,get_state());
         think();
-        if(index == 889) {
-            exit(0);
-        }
     }
 }
 
 void philosopher::eat() {
-    sleep(1);
+    left_fork.state = CLEAN;
+    visualizer->update_fork_state(left_fork.get_id(), left_fork.get_state());
     left_fork.isOccupied = true;
     sleep(1);
     right_fork.isOccupied = true;
@@ -37,6 +37,8 @@ void philosopher::eat() {
     left_fork.isOccupied = false;
     sleep(1);
     right_fork.isOccupied = false;
+    left_fork.state = DIRTY;
+    visualizer->update_fork_state(left_fork.get_id(), left_fork.get_state());
 }
 
 void philosopher::think() {    
@@ -51,7 +53,7 @@ std::string philosopher::get_state() {
             return "thinking";
         break;
         case EATING:
-            return "eating";
+            return "eating  ";
         break;
         case WAIT_LEFT:
             return "waiting for left";

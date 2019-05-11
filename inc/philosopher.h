@@ -1,6 +1,7 @@
 #ifndef PHILOSOPHER_H
 #define PHILOSOPHER_H
 #include "../inc/fork_t.h"
+#include "../inc/visualization.h"
 #include <random>
 #include <iostream>
 
@@ -22,6 +23,7 @@ class philosopher {
     int index;
     philosopher_state state;
     static bool isStopped;
+    static visualization *visualizer;
     std::string get_state();
     philosopher(int index, fork_t &_left_fork, fork_t &_right_fork); 
     philosopher() {;}

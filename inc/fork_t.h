@@ -1,6 +1,6 @@
 #ifndef FORK_T_H
 #define FORK_T_H
-#include "string"
+#include "../inc/visualization.h"
 
 enum fork_state {
     CLEAN, DIRTY
@@ -8,14 +8,14 @@ enum fork_state {
 
 class fork_t {
     int index;
-    fork_state state;
     int owner_id;
     
     public:
-    
+    fork_state state; // make private later
     fork_t() { ; }
     fork_t(int _index);
     bool isOccupied;
+    static visualization *visualizer;
 
     std::string get_state();
     int get_id();
