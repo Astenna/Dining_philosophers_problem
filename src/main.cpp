@@ -17,13 +17,10 @@ int main(int argc, char *argv[]) {
         }
     }
     
-    std::cout << "Enter q to stop theards!" << std::endl;
     table mainTable = table(philosopherNumber);
 
     while(entered != 'q' && std::cin) {
-        std::cout << "Enter q to stop theards!" << std::endl;
         std::cin >> entered;
     }
-    
     mainTable.stop();
 }
