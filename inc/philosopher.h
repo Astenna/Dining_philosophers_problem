@@ -18,17 +18,19 @@ class philosopher {
 
     void eat();
     void think();
+    void request_forks();
+    void put_down_forks();
 
     public:
-    int index;
+    int id;
     philosopher_state state;
-    static bool isStopped;
+    static bool is_stopped;
     static visualization *visualizer;
     
     std::string get_state();
-    philosopher(int index, fork_t &_left_fork, fork_t &_right_fork); 
+    philosopher(int id, fork_t &_left_fork, fork_t &_right_fork); 
     philosopher() {;}
-    int getId() { return index; }
+    int getId() { return id; }
     void dine();
 };
 

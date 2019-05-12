@@ -16,6 +16,7 @@ class table {
     void initialize_philosphers();
 
     public:
+    bool is_initialized;
     ~table();
     table(int _phil_num);
     void stop();

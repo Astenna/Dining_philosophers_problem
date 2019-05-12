@@ -1,16 +1,18 @@
 #include "../inc/fork_t.h"
 #include <iostream>
 #include <unistd.h>
-bool fork_t::is_initialized = false;
+#include <functional>
+
+
 
 fork_t::fork_t(int _index, int _owner_id) {
-    index = _index;
+    id = _index;
     owner_id = _owner_id;
     state = DIRTY;
-    visualizer->print_fork_index(_index);
+    state = fork_state::DIRTY;
 }
 
-fork_t::fork_t(const fork_t &f) : index(f.index), owner_id(f.owner_id),
+fork_t::fork_t(const fork_t &f) : id(f.id), owner_id(f.owner_id),
                                 state(f.state)
                                 {}
 
@@ -26,40 +28,44 @@ std::string fork_t::get_state() {
 }
     
 int fork_t::get_id() {
-    return index;
+    return id;
 }
     
 int fork_t::get_owner_id() {
     return owner_id;
 }
 
-void fork_t::request(int phil_req) {
-    while (owner_id != phil_req ) {
-        std::unique_lock<std::mutex> lck(mutex);
-        while (state == CLEAN && is_initialized)  {
-            condition.wait(lck);
-        } 
-        state = CLEAN;
-        owner_id = phil_req;
-        visualizer->update_fork_state(index,get_state());
-        visualizer->update_fork_owner(index,phil_req);
-        std::cout<<std::endl<<std::endl<<std::endl<<std::endl<<std::endl<<std::endl<<std::endl<<"lock on "<< index << "by " << phil_req;
-        while(true);
+void fork_t::request(int requesting_id) {
+    while(owner_id != requesting_id) {
+        if(state == fork_state::CLEAN) {
+            std::cout<<"Filozof " << requesting_id << " czeka na " << id << std::endl;
+            std::unique_lock<std::mutex> lock(condition_mutex);
+            condition.wait(lock);
+            std::cout<<"Filozof " << requesting_id << " BUDZI SIE w oczekiwaniu na " << id << std::endl;
+        } else {
+            std::cout<<"Filozof " << requesting_id << " dostaje czysty " << id << std::endl;
+            std::lock_guard<std::mutex> lock(usage_mutex);
+            state = fork_state::CLEAN;
+            owner_id = requesting_id;
+        }
     }
 }
 
-void fork_t::free() {
-    state = DIRTY;
-    visualizer->update_fork_state(index, get_state());
+void fork_t::use() {
+    usage_mutex.lock();
+}
+
+void fork_t::put_down() {
+    state = fork_state::DIRTY;
+    usage_mutex.unlock();
+    std::cout<<"Widelec " << id << "zwolniony  i brudny"<<std::endl;
+    std::unique_lock<std::mutex> lock(condition_mutex);
     condition.notify_all();
 }
 
 fork_t& fork_t::operator=(fork_t const &f) {
     if(this == &f) return *this; 
-    std::lock(mutex, f.mutex);                
-    std::lock_guard<std::mutex> l1( mutex, std::adopt_lock );    
-    std::lock_guard<std::mutex> l2( f.mutex, std::adopt_lock );
-    index = f.index;
+    id = f.id;
     owner_id = f.owner_id;
     state = f.state;
     return *this;

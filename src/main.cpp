@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[]) {
 
-    int philosopherNumber = 3;
+    int philosopherNumber = 5;
     int entered = 'a';
 
     if( argc > 1) {
