@@ -3,7 +3,6 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
-#include "../inc/visualization.h"
 
 enum fork_state {
     CLEAN, DIRTY

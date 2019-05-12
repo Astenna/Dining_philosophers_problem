@@ -1,6 +1,6 @@
 #include "philosopher.h"
 #include "fork_t.h"
-#include "visualization.h"
+#include <ncurses.h>
 #include <thread>
 #include <vector>
 
