@@ -17,6 +17,9 @@ class visualization {
     void draw_philosophers();
     void draw_forks();
     void calculate_coordinates();
+    void initialize_visualization();
+    void update_forks();
+    void update_philosophers();
 
     public:
     visualization();

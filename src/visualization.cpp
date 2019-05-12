@@ -2,9 +2,7 @@
 #include <unistd.h>
 
 visualization::visualization() {
-    initscr();
-    noecho();
-    box(stdscr,0,0);
+ 
     refresh();
     draw_philosophers();
     draw_forks();
@@ -106,7 +104,7 @@ void visualization::update_fork_owner(int index, int owner) {
 }
 
 void visualization::update_philosopher_state(int index, std::string state) {
-int column_width = (float)(separator-margin_x)/4;
+    int column_width = (float)(separator-margin_x)/4;
     std::lock_guard<std::mutex> lock(mutex);
     mvwprintw(philosophers_window, 2*index+5,column_width+3,"%s",state.c_str());
     touchwin(philosophers_window);

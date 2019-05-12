@@ -10,7 +10,7 @@ enum philosopher_state {
 };
 
 class philosopher {
-
+    philosopher_state state;
     fork_t left_fork;
     fork_t right_fork;
     std::mt19937 mt;
@@ -23,14 +23,14 @@ class philosopher {
 
     public:
     int id;
-    philosopher_state state;
-    static bool is_stopped;
-    static visualization *visualizer;
-    
-    std::string get_state();
+
     philosopher(int id, fork_t &_left_fork, fork_t &_right_fork); 
     philosopher() {;}
-    int getId() { return id; }
+    static bool is_stopped;
+    static bool is_started;
+    static visualization *visualizer;
+    std::string get_state();
+    int get_id() { return id; }
     void dine();
 };
 
