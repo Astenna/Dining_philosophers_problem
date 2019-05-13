@@ -9,7 +9,7 @@ class table {
     const int philosopher_number;
     std::thread* philospoher_threads;
     std::vector<philosopher> philosophers;
-    std::vector<fork_t> forks;
+    std::vector<fork_t*> forks;
 
     std::thread* visualizer_thread;
     WINDOW* philosophers_window;
@@ -19,7 +19,7 @@ class table {
     int margin_x;
     int margin_y;
     int separator;
-    void update_forks(int j);
+    void update_forks();
     void update_philosophers();
     void update_screen();
     void initialize_visualization();
