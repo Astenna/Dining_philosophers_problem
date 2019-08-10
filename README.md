@@ -6,7 +6,7 @@ This project was a part of Operating Systems course on Wroclaw University of Sci
 
 ### Prerequisites
 
-* C++11 - the language used
+* C++11 
 * make - used for build automation
 * ncurses - library used to build interface
 
@@ -14,10 +14,6 @@ This project was a part of Operating Systems course on Wroclaw University of Sci
 
 ```
 make
-```
-
-```
-./dining_philosophers
 ```
 
 
