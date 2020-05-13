@@ -1,8 +1,7 @@
 __start__: dining_philosophers
-	./dining_philosophers
 
 dining_philosophers: obj obj/main.o obj/fork_t.o obj/philosopher.o obj/table.o
-	g++ -g -pthread -rdynamic -lncurses -Wall -pedantic -std=c++11 -o dining_philosophers obj/main.o obj/fork_t.o obj/philosopher.o obj/table.o
+	g++ -g -pthread -rdynamic -Wall -pedantic -std=c++11 -o dining_philosophers obj/main.o obj/fork_t.o obj/philosopher.o obj/table.o  -lncurses 
 
 obj:
 	mkdir obj
